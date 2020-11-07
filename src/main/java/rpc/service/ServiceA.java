@@ -7,7 +7,7 @@ public class ServiceA implements IServiceA {
 
     @Override
     public Long sum(Integer[] ints) throws ServiceMethodParamException {
-        long sum = 0;
+        Long sum = 0L;
         if(ints==null){
             throw new ServiceMethodParamException("参数不合法");
         }

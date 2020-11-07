@@ -13,7 +13,7 @@ public class ExampleTestController {
     private IServiceA iServiceA;
 
     {
-        iServiceA = (IServiceA) ClientProxyUtil.getProxyInstance(IServiceA.class);
+    	iServiceA = (IServiceA) ClientProxyUtil.getProxyInstance(IServiceA.class);
     }
 
     public long countIntsSum(Integer[] ints) throws ServiceMethodParamException {

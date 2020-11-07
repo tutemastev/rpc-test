@@ -2,14 +2,38 @@ package rpc.common;
 
 import java.io.Serializable;
 
-public class RequestBeanDTO<T> implements Serializable {
+public class RequestBeanDTO implements Serializable {
+	
+	public RequestBeanDTO() {}
+	
+	public RequestBeanDTO(String mName, String iName, Object[] data) {
+		this.data = data;
+		this.interfaceName = iName;
+		this.methodName = mName;
+	}
 
     /**
      * 
      */
     private static final long serialVersionUID = 585410020925710408L;
 
+    private String methodReturnClassName;
+    
     /**
+	 * @return the methodReturnClassName
+	 */
+	public String getMethodReturnClassName() {
+		return methodReturnClassName;
+	}
+
+	/**
+	 * @param methodReturnClassName the methodReturnClassName to set
+	 */
+	public void setMethodReturnClassName(String methodReturnClassName) {
+		this.methodReturnClassName = methodReturnClassName;
+	}
+
+	/**
      * 请求方法名称
      */
     private String methodName;
@@ -22,17 +46,23 @@ public class RequestBeanDTO<T> implements Serializable {
     /**
      * 方法参数
      */
-    private T Data;
+    private Object[] data;
 
-    public T getData() {
-        return Data;
-    }
+    /**
+	 * @return the data
+	 */
+	public Object[] getData() {
+		return data;
+	}
 
-    public void setData(T data) {
-        Data = data;
-    }
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Object[] data) {
+		this.data = data;
+	}
 
-    public String getMethodName() {
+	public String getMethodName() {
         return methodName;
     }
 

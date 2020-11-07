@@ -2,7 +2,7 @@ package rpc.common;
 
 import java.io.Serializable;
 
-public class ResponseBeanDTO<T> implements Serializable {
+public class ResponseBeanDTO implements Serializable {
 
     /**
      * 
@@ -22,9 +22,25 @@ public class ResponseBeanDTO<T> implements Serializable {
     /**
      * 响应结果
      */
-    private T data;
+    private Object data;
+    
+    private Exception exception;
 
-    public String getResultCode() {
+	/**
+	 * @return the exception
+	 */
+	public Exception getException() {
+		return exception;
+	}
+
+	/**
+	 * @param exception the exception to set
+	 */
+	public void setException(Exception exception) {
+		this.exception = exception;
+	}
+
+	public String getResultCode() {
         return resultCode;
     }
 
@@ -40,12 +56,18 @@ public class ResponseBeanDTO<T> implements Serializable {
         this.resultMsg = resultMsg;
     }
 
-    public T getData() {
-        return data;
-    }
+	/**
+	 * @return the data
+	 */
+	public Object getData() {
+		return data;
+	}
 
-    public void setData(T data) {
-        this.data = data;
-    }
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Object data) {
+		this.data = data;
+	}
 
 }
