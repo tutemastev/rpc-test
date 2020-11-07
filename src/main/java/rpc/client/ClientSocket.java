@@ -13,16 +13,16 @@ public class ClientSocket {
 	private static final String IP_ADD = "127.0.0.1";
 	//private static final int CLIENT_SOCKET_TIMEOUT = 5000;
 	private static Socket socket = null;
-	private static ObjectOutputStream objectOutputStream;
-	private static ObjectInputStream objectInputStream;
+	/*private static ObjectOutputStream objectOutputStream;
+	private static ObjectInputStream objectInputStream;*/
 	static {
-		try {
+		/*try {
 			socket = new Socket(IP_ADD, CommonStaticSource.PROT);
 			objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
 			objectInputStream = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public static Socket getSocket(){
@@ -32,6 +32,10 @@ public class ClientSocket {
 	
 	public static synchronized Object oneRpcSericeMethodRun(Serializable obj){
 		try {
+			//很奇怪 要每次 新建
+			socket = new Socket(IP_ADD, CommonStaticSource.PROT);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 			objectOutputStream.writeObject(obj);
 			objectOutputStream.flush();
 			socket.getOutputStream().flush();

@@ -1,6 +1,7 @@
 package rpc.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -49,8 +50,10 @@ public class ServiceSocket {
 			@Override
 			public void run() {
 				OutputStream os = null;
+				InputStream is = null;
 				try {
 					os = clientSocket.getOutputStream();
+					is = clientSocket.getInputStream();
 				} catch (IOException e2) {
 					e2.printStackTrace();
 				}
@@ -59,57 +62,56 @@ public class ServiceSocket {
 				ResponseBeanDTO response = new ResponseBeanDTO();
 				try {
 					objectOutputStream = new ObjectOutputStream(os);
-					objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-					int c = 0;
+					objectInputStream = new ObjectInputStream(is);
+					/*int c = 0;
 					while(true){
-						if(c>3){
-							response.setException(new RuntimeException("处理异常"));
+					}
+					if(c>3){
+						response.setException(new RuntimeException("处理异常"));
+						response.setResultCode("999");
+						response.setResultMsg("failed");
+						objectOutputStream.writeObject(response);
+						objectOutputStream.flush();
+						return;
+					}*/
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						response.setException(e);
+						objectOutputStream.writeObject(response);
+						objectOutputStream.flush();
+						return;
+					}
+					try {
+						Object request = objectInputStream.readObject();
+						RequestBeanDTO requestDTO = null;
+						if(request instanceof RequestBeanDTO){
+							requestDTO = (RequestBeanDTO)request;
+						} else {
+							response.setException(new RuntimeException("请求参数错误"));
 							response.setResultCode("999");
 							response.setResultMsg("failed");
 							objectOutputStream.writeObject(response);
-							objectOutputStream.flush();
 							return;
 						}
-						try {
-							TimeUnit.SECONDS.sleep(1);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-							response.setException(e);
+						if(requestDTO != null){
+							response = ServiceRpcHandle.runRpcSericeMethod(requestDTO);
+							response.setResultCode("001");
+							response.setResultMsg("successful");
+							System.out.println("-----"+response.getData().toString()+"-----");
 							objectOutputStream.writeObject(response);
 							objectOutputStream.flush();
 							return;
 						}
-						c++;
-						try {
-							Object request = objectInputStream.readObject();
-							RequestBeanDTO requestDTO = null;
-							if(request instanceof RequestBeanDTO){
-								requestDTO = (RequestBeanDTO)request;
-							} else {
-								response.setException(new RuntimeException("请求参数错误"));
-								response.setResultCode("999");
-								response.setResultMsg("failed");
-								objectOutputStream.writeObject(response);
-								return;
-							}
-							if(requestDTO != null){
-								response = ServiceRpcHandle.runRpcSericeMethod(requestDTO);
-								response.setResultCode("001");
-								response.setResultMsg("successful");
-								System.out.println("-----"+response.getData().toString()+"-----");
-								objectOutputStream.writeObject(response);
-								objectOutputStream.flush();
-								return;
-							}
-						} catch (ClassNotFoundException e) {
-							e.printStackTrace();
-							response.setException(new RuntimeException("处理异常"));
-							response.setResultCode("999");
-							response.setResultMsg("failed");
-							objectOutputStream.writeObject(response);
-							objectOutputStream.flush();
-							return;
-						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+						response.setException(new RuntimeException("处理异常"));
+						response.setResultCode("999");
+						response.setResultMsg("failed");
+						objectOutputStream.writeObject(response);
+						objectOutputStream.flush();
+						return;
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -124,8 +126,7 @@ public class ServiceSocket {
 					}
 				} finally {
 					try {
-						objectOutputStream.close();
-						objectInputStream.close();
+						clientSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
