@@ -22,7 +22,7 @@ public class ClientStart {
 	}
 
     public static void main(String[] args) throws ServiceMethodParamException {
-    	CountDownLatch count;
+    	final CountDownLatch count;
     	List<Integer[]> intsList = new ArrayList<Integer[]>();
     	intsList.add(new Integer[]{1,1,1});
     	intsList.add(new Integer[]{1,100,1});
@@ -31,9 +31,9 @@ public class ClientStart {
     	intsList.add(new Integer[]{1,1,999});
     	count = new CountDownLatch(intsList.size());
     	
-    	ExampleTestController controller = new ExampleTestController();
+    	final ExampleTestController controller = new ExampleTestController();
     	
-    	for (Integer[] integers : intsList) {
+    	for (final Integer[] integers : intsList) {
     		threadPoolSocket.execute(new Runnable() {
     			@Override
     			public void run() {
