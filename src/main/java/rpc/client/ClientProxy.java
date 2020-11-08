@@ -7,6 +7,15 @@ import rpc.common.RequestBeanDTO;
 
 public class ClientProxy implements InvocationHandler {
 	
+	private ClientProxy() {
+	}
+	
+	private static final ClientProxy INVOCATION_HANDLER = new ClientProxy();
+	
+	public static ClientProxy getClientProxy(){
+		return INVOCATION_HANDLER;
+	}
+	
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result = null;
