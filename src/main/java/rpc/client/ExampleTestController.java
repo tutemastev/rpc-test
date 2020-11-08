@@ -13,6 +13,7 @@ public class ExampleTestController {
     private IServiceA iServiceA;
 
     {
+    	//代理
     	iServiceA = (IServiceA) ClientProxyUtil.getProxyInstance(IServiceA.class);
     }
 

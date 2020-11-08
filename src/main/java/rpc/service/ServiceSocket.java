@@ -19,7 +19,6 @@ import rpc.common.RequestBeanDTO;
 import rpc.common.ResponseBeanDTO;
 
 public class ServiceSocket {
-	public static Map<String, Class<?>> mapCls = new HashMap<String, Class<?>>();
 
 	private static ServerSocket serverSocket = null;
 	private static ThreadPoolExecutor threadPoolSocket = new ThreadPoolExecutor(4, 8, 3, TimeUnit.SECONDS,
@@ -27,7 +26,8 @@ public class ServiceSocket {
 
 	static{
 		try {
-			mapCls.put(IServiceA.class.getName(), ServiceA.class);
+			
+			
 			serverSocket = new ServerSocket(CommonStaticSource.PROT);
 			System.out.println("serverSocket start");
 			ServiceSocket.getClientSocket();
@@ -63,18 +63,7 @@ public class ServiceSocket {
 				try {
 					objectOutputStream = new ObjectOutputStream(os);
 					objectInputStream = new ObjectInputStream(is);
-					/*int c = 0;
-					while(true){
-					}
-					if(c>3){
-						response.setException(new RuntimeException("处理异常"));
-						response.setResultCode("999");
-						response.setResultMsg("failed");
-						objectOutputStream.writeObject(response);
-						objectOutputStream.flush();
-						return;
-					}*/
-					try {
+					/*try {
 						TimeUnit.SECONDS.sleep(1);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -82,7 +71,7 @@ public class ServiceSocket {
 						objectOutputStream.writeObject(response);
 						objectOutputStream.flush();
 						return;
-					}
+					}*/
 					try {
 						Object request = objectInputStream.readObject();
 						RequestBeanDTO requestDTO = null;
@@ -95,15 +84,13 @@ public class ServiceSocket {
 							objectOutputStream.writeObject(response);
 							return;
 						}
-						if(requestDTO != null){
-							response = ServiceRpcHandle.runRpcSericeMethod(requestDTO);
-							response.setResultCode("001");
-							response.setResultMsg("successful");
-							System.out.println("-----"+response.getData().toString()+"-----");
-							objectOutputStream.writeObject(response);
-							objectOutputStream.flush();
-							return;
-						}
+						response = ServiceRpcHandle.runRpcSericeMethod(requestDTO);
+						response.setResultCode("001");
+						response.setResultMsg("successful");
+						System.out.println("-----"+response.getData().toString()+"-----");
+						objectOutputStream.writeObject(response);
+						objectOutputStream.flush();
+						return;
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 						response.setException(new RuntimeException("处理异常"));
@@ -126,6 +113,8 @@ public class ServiceSocket {
 					}
 				} finally {
 					try {
+						//如果不关 是不是意味着 client端得socket不用每次都重新创建 
+						// TODO 验证
 						clientSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();

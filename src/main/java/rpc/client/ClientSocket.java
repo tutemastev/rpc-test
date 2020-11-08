@@ -38,7 +38,6 @@ public class ClientSocket {
 			ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 			objectOutputStream.writeObject(obj);
 			objectOutputStream.flush();
-			socket.getOutputStream().flush();
 			int c = 0;
 			while(true){
 				if(c>5){
@@ -51,6 +50,7 @@ public class ClientSocket {
 				}
 				c++;
 				try {
+					//反序列化
 					Object result = objectInputStream.readObject();
 					System.out.println("the rpc result is:"+ result.toString());
 					if(result != null){
@@ -64,7 +64,7 @@ public class ClientSocket {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		throw new RuntimeException("系统错误");
+		throw new RuntimeException("无处理结果,系统错误");
 	}
 	
 	public static void shutDownClientSocket(){

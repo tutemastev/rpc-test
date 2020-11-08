@@ -6,15 +6,13 @@ import rpc.common.ResponseBeanDTO;
 public class ClientServiceHandle {
 
     
-	public static Object runRpcSericeMethod(Class<?> cls, RequestBeanDTO request) {
-		Object t = null;
-		String returnClassName = cls.getName();
-		request.setMethodReturnClassName(returnClassName);
+	public static Object runRpcSericeMethod(RequestBeanDTO request) {
+		Object data = null;
 		ResponseBeanDTO responseBean;
 		try {
 			responseBean = ClientServiceHandle.rpcSendRequest(request);
-			t = responseBean.getData();
-			return t;
+			data = responseBean.getData();
+			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());

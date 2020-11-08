@@ -18,12 +18,9 @@ public class ClientProxy implements InvocationHandler {
         Object result = 999L;//先默认写死 客户端执行
         String interfaceName = method.getDeclaringClass().getName().toString();
         String methodName = method.getName();
-        Class<?> methodReturnCls = method.getReturnType();
-        System.out.println(methodName);
-        System.out.println(args);
-        System.out.println(interfaceName);
+        //Class<?> methodReturnCls = method.getReturnType();
         RequestBeanDTO request = new RequestBeanDTO(methodName, interfaceName, args);
-        result = ClientServiceHandle.runRpcSericeMethod(methodReturnCls, request);
+        result = ClientServiceHandle.runRpcSericeMethod(request);
         return result;
     }
 
